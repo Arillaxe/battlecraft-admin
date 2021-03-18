@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
+import ReactMde from 'react-mde';
+import ReactMarkdown from 'react-markdown';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Pagination from 'react-bootstrap/Pagination';
 import Spinner from 'react-bootstrap/Spinner';
 import API from '../../lib/api.js';
+import 'react-mde/lib/styles/css/react-mde-all.css';
 import './news.sass';
 
 const News = () => {
@@ -14,6 +17,9 @@ const News = () => {
   const [pages, setPages] = useState(1);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [value, setValue] = useState("**Hello world!!!**");
+  const [selectedTab, setSelectedTab] = useState("write");
 
   const fetchNews = async () => {
     const news = await API.getNews(page);
@@ -26,12 +32,18 @@ const News = () => {
     fetchNews();
   }, [page]);
 
+  const saveImage = async function* (data) {
+    yield 'http://localhost:4000/images/steve.png';
+    yield true;
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     
     setLoading(true);
 
     const formData = new FormData(e.target);
+    formData.set('text', value);
     try {
       await API.createNews(
         localStorage.getItem('token'),
@@ -82,7 +94,23 @@ const News = () => {
           </Form.Group>
           <Form.Group controlId="formNewsContent">
             <Form.Label>Содержимое</Form.Label>
-            <Form.Control as="textarea" placeholder="Введите содежимое" rows="5" name="text" />
+            <ReactMde
+              value={value}
+              onChange={setValue}
+              selectedTab={selectedTab}
+              onTabChange={setSelectedTab}
+              generateMarkdownPreview={(markdown) =>
+                Promise.resolve(<ReactMarkdown source={markdown} />)
+              }
+              childProps={{
+                writeButton: {
+                  tabIndex: -1
+                }
+              }}
+              paste={{
+                saveImage,
+              }}
+            />
           </Form.Group>
           <Form.Group controlId="formNewsImage">
             <Form.Label>Картинка</Form.Label>
@@ -109,11 +137,13 @@ const News = () => {
               <Card.Header>{title}</Card.Header>
               {img_url && (
                 <div className="news-image-wrapper">
-                  <Card.Img src={`https://api-battlecraft.loca.lt/images/${img_url}`} />
+                  <Card.Img src={`${process.env.REACT_APP_SERVER_HOST}/images/${img_url}`} />
                 </div>
               )}
               <Card.Body>
-                <div className="news-text">{text}</div>
+                <div className="news-text">
+                  <ReactMarkdown>{text}</ReactMarkdown>
+                </div>
               </Card.Body>
               <Card.Footer>
                 <Button className="news-btn">Редактировать</Button>

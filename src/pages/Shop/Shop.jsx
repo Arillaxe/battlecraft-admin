@@ -144,7 +144,7 @@ const Shop = () => {
               <Card.Header>{title}</Card.Header>
               {image && (
                 <div className="shop-image-wrapper">
-                  <Card.Img src={`https://api-battlecraft.loca.lt/images/${image}`} />
+                  <Card.Img src={`${process.env.REACT_APP_SERVER_HOST}/images/${image}`} />
                 </div>
               )}
               <Card.Body>
