@@ -33,6 +33,18 @@ const News = () => {
   }, [page]);
 
   const saveImage = async function* (data) {
+    const formData = new FormData();
+    formData.append('image', data);
+
+    console.log(data);
+
+    const a = await API.uploadImage(
+      localStorage.getItem('token'),
+      formData
+    );
+
+    console.log(a);
+
     yield 'http://localhost:4000/images/steve.png';
     yield true;
   };

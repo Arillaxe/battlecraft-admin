@@ -110,6 +110,17 @@ class API {
 
     return data;
   }
+
+  async uploadImage(token, params) {
+    const { data } = await axios.post(`${this.baseURL}/manage/news/upload`, params, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    return data;
+  }
 }
 
 const APISingleton = new API(process.env.REACT_APP_SERVER_HOST);
