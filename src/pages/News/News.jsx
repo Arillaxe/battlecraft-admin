@@ -34,18 +34,15 @@ const News = () => {
 
   const saveImage = async function* (data) {
     const formData = new FormData();
-    formData.append('image', data);
+    const file = new File([data], `${Date.now()}.jpeg`);
+    formData.append('image', file);
 
-    console.log(data);
-
-    const a = await API.uploadImage(
+    const response = await API.uploadImage(
       localStorage.getItem('token'),
       formData
     );
 
-    console.log(a);
-
-    yield 'http://localhost:4000/images/steve.png';
+    yield `${process.env.REACT_APP_SERVER_HOST}${response.url}`;
     yield true;
   };
 
@@ -104,6 +101,10 @@ const News = () => {
             <Form.Label>Заголовок</Form.Label>
             <Form.Control type="text" placeholder="Введите заголовок" name="title" />
           </Form.Group>
+          <Form.Group controlId="formNewsTitle">
+            <Form.Label>Превью</Form.Label>
+            <Form.Control as="textarea" placeholder="Введите превью" name="preview" />
+          </Form.Group>
           <Form.Group controlId="formNewsContent">
             <Form.Label>Содержимое</Form.Label>
             <ReactMde
@@ -144,7 +145,7 @@ const News = () => {
           <p>Новостей нет</p>
         ) : (
           <div className="news-list">
-          {news.map(({ id, title, text, img_url }) => (
+          {news.map(({ id, title, preview, img_url }) => (
             <Card key={`news-item-${id}`} className="news-item">
               <Card.Header>{title}</Card.Header>
               {img_url && (
@@ -153,8 +154,8 @@ const News = () => {
                 </div>
               )}
               <Card.Body>
-                <div className="news-text">
-                  <ReactMarkdown>{text}</ReactMarkdown>
+                <div className="news-preview">
+                  <ReactMarkdown>{preview}</ReactMarkdown>
                 </div>
               </Card.Body>
               <Card.Footer>

@@ -117,7 +117,7 @@ const Shop = () => {
           </Form.Group>
           <Form.Group controlId="formShopCommand">
             <Form.Label>Команда</Form.Label>
-            <Form.Control type="text" placeholder="Введите команду" name="command" />
+            <Form.Control type="text" placeholder="Введите команду" name="data" />
           </Form.Group>
           <Form.Group controlId="formShopImage">
             <Form.Label>Картинка</Form.Label>
