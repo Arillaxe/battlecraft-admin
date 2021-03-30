@@ -18,8 +18,8 @@ const News = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [value, setValue] = useState("**Hello world!!!**");
-  const [selectedTab, setSelectedTab] = useState("write");
+  const [value, setValue] = useState('');
+  const [selectedTab, setSelectedTab] = useState('write');
 
   const fetchNews = async () => {
     const news = await API.getNews(page);
@@ -63,6 +63,7 @@ const News = () => {
       
       fetchNews();
       setError('');
+      setValue('');
     } catch(e) {
       setError(e.response.data.message);
     }
@@ -127,7 +128,7 @@ const News = () => {
           </Form.Group>
           <Form.Group controlId="formNewsImage">
             <Form.Label>Картинка</Form.Label>
-            <Form.Control type="file" placeholder="Введите содежимое" accept="image/png, image/jpeg" name="image" />
+            <Form.Control type="file" accept="image/png, image/jpeg" name="image" />
             {error && (
               <div className="error-message">
                 {error}
