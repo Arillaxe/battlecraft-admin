@@ -126,6 +126,10 @@ const News = () => {
               }}
             />
           </Form.Group>
+          <Form.Group controlId="formNewsShowOnJumbotron">
+            <Form.Label>Показывать на слайдере</Form.Label>
+            <Form.Control type="checkbox" placeholder="Введите заголовок" name="displayOnJumbotron" className="checkbox" />
+          </Form.Group>
           <Form.Group controlId="formNewsImage">
             <Form.Label>Картинка</Form.Label>
             <Form.Control type="file" accept="image/png, image/jpeg" name="image" />

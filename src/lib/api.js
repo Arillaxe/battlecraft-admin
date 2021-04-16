@@ -78,8 +78,8 @@ class API {
     return data;
   }
 
-  async getShopItems(page) {
-    const { data } = await axios.get(`${this.baseURL}/shop?page=${page}`);
+  async getShopItems() {
+    const { data } = await axios.get(`${this.baseURL}/shop`);
 
     return data;
   }

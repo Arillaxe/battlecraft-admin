@@ -11,17 +11,14 @@ import './shop.sass';
 const Shop = () => {
   const [items, setItems] = useState([]);
   const [servers, setServers] = useState([]);
-  const [page, setPage] = useState(1);
-  const [pages, setPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const fetchItems = async () => {
     try {
-      const items = await API.getShopItems(page);
+      const items = await API.getShopItems();
 
-      setItems(items.data);
-      setPages(items.page_count);
+      setItems(items);
     } catch (e) {
       NotificationManager.error(e.response.data.message);
     }
@@ -54,7 +51,7 @@ const Shop = () => {
         formData
       );
 
-      e.target.reset();
+      // e.target.reset();
       
       fetchItems();
       setError('');
@@ -139,7 +136,7 @@ const Shop = () => {
           <p>Товаров нет</p>
         ) : (
           <div className="shop-list">
-          {items.map(({ id, type, server, price, command, image, title }) => (
+          {items.map(({ id, type, server, price, data, image, title }) => (
             <Card key={`shop-item-${id}`} className="shop-item">
               <Card.Header>{title}</Card.Header>
               {image && (
@@ -148,7 +145,10 @@ const Shop = () => {
                 </div>
               )}
               <Card.Body>
-                <div className="shop-text">{type}</div>
+                <div className="shop-text">Тип: {type}</div>
+                <div className="shop-text">Сервер: {server}</div>
+                <div className="shop-text">Цена: {price}</div>
+                <div className="shop-text">Команда: {data}</div>
               </Card.Body>
               <Card.Footer>
                 <Button className="shop-btn">Редактировать</Button>
@@ -157,15 +157,6 @@ const Shop = () => {
             </Card>
           ))}
           </div>
-        )}
-        {pages > 0 && (
-          <Pagination>
-            <Pagination.First onClick={() => setPage(1)}/>
-            {Array(pages).fill().map((_, idx) => (
-              <Pagination.Item key={`page-${idx + 1}`} onClick={() => setPage(idx + 1)} active={page === idx + 1}>{idx + 1}</Pagination.Item>
-            ))}
-            <Pagination.Last onClick={() => setPage(pages)} />
-          </Pagination>
         )}
       </div>
     </div>
